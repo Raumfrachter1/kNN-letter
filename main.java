@@ -7,10 +7,10 @@ public class main {
                                             {0.5, -0.91, 0.26, -0.5},
                                             {-0.26, -0.27, 0.17, 0.87}};
         Double[] biases = new Double[]{2.0, 3.0, 0.5};
-        Double[][] output = math.add(math.dot(weights, inputs), biases);
+        Double[][] output = math.add(math.dot(inputs, math.transponieren(weights)), biases);
         for (int i = 0; i < output.length; i++){
             for(int j = 0; j < output[0].length; j++){
-                System.out.print(output[i][j]);
+                System.out.print(output[i][j] + "  ");
             }
             System.out.println("");
         }

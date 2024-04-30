@@ -40,8 +40,18 @@ public class math {
         if (a[0].length != b.length){
             throw new IllegalArgumentException("Value Error: shape (" + a[0].length + ", " + a[0].length + ") and " + b.length + " doesnt fit.");
         }
-
-
+        Double[][] output = new Double[a.length][b[0].length];
+        double tmp = 0;
+        for (int i = 0; i < a.length; i++){
+            for (int j = 0; j < b[0].length; j++){
+                for(int k = 0; k < b.length; k++){
+                    tmp += a[i][k].doubleValue() * b[k][j].doubleValue();
+                }
+                output[i][j] = tmp;
+                tmp = 0;
+            }
+        }
+        return output;
     }
 
 
@@ -74,5 +84,35 @@ public class math {
             result[i] = a[i].doubleValue() + b[i].doubleValue();
         }
         return result;
+    }
+
+    public static <T extends Number> Double[][] add(T[][] a, T[] b){
+        if (a[0].length != b.length){
+            throw new IllegalArgumentException("Brudi mach mal irgendwann einen guten Kommentar - du suchst in add Matrix Vektor");
+        }
+
+        Double[][] output = new Double[a.length][a[0].length];
+        for (int i = 0; i < a[0].length; i++){
+            output[i] = add(a[i], b);
+        }
+
+        return output;
+    }
+    /**
+     * Matrix Transponation
+     * transponieren(matrix[i][j]) = matrix[j][i]
+     */
+    public static <T> T[][] transponieren(T[][] a){
+        int m = a.length;    // Number of rows
+        int n = a[0].length; // Number of columns
+
+        @SuppressWarnings("unchecked")
+        T[][] b = (T[][]) java.lang.reflect.Array.newInstance(a[0][0].getClass(), n, m);
+        for (int i = 0; i < a.length; i++){
+            for (int j = 0; j < a[0].length; j++){
+                b[j][i] = a[i][j];
+            }
+        }
+        return b;
     }
 }
