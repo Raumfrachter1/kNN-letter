@@ -73,7 +73,33 @@ public class math {
 
     /**
      * Addition von Matrixen und Vektoren
+     *
+     * Case 1: Vektor Skalar -> each value in the vector will be added with the skalar
+     * Case 2: Matrix Skalar -> each value in the matrix will be added with the skalar
+     * Case 3: Vektor Vektor ->
+     * Case 4: matrix vektor ->
+     * Case 5: matrix matrix ->
+     *
      */
+
+    public static <T extends Number> Double[] add(T[] vector, T skalar){
+        Double[] output = new Double[vector.length];
+
+        for (int i = 0; i < vector.length; i++){
+            output[i] = vector[i].doubleValue() + skalar.doubleValue();
+        }
+
+        return output;
+    }
+    public static <T extends Number> Double[][] add(T[][] matrix, T skalar){
+        Double[][] output = new Double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                output[i][j] = matrix[i][j].doubleValue() + skalar.doubleValue();
+            }
+        }
+        return output;
+    }
     public static <T extends Number> Double[] add(T[] a, T[] b){
         if (a.length != b.length){
             throw new IllegalArgumentException("The vectors have not the same length");
@@ -114,5 +140,31 @@ public class math {
             }
         }
         return b;
+    }
+
+    /**
+     * Maximum and Minimum Funktion
+     */
+    public static <T extends Number> Double max(T a, T b){
+        if (a.doubleValue() <= b.doubleValue()) {
+            return b.doubleValue();
+        } else {
+            return a.doubleValue();
+        }
+    }
+    public static <T extends Number> Double max(T a){
+        return max(0, a);
+    }
+
+    public static <T extends Number> Double min(T a, T b){
+        if (a.doubleValue() >= b.doubleValue()){
+            return b.doubleValue();
+        }
+        else {
+            return a.doubleValue();
+        }
+    }
+    public static <T extends Number> Double min(T a){
+        return min(0, a);
     }
 }
