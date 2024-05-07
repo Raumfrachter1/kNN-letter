@@ -34,7 +34,6 @@ public class math {
 
         return result;
     }
-
     //Case 2: If both a and b are 2-D arrays, it is matrix multiplication, but using matmul or a @ b is preferred.
     public static <T extends Number> Double[][] dot(T[][] a, T[][] b){
         if (a[0].length != b.length){
@@ -53,8 +52,6 @@ public class math {
         }
         return output;
     }
-
-
     //Case 4: If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
     public static <T extends Number> Double[] dot(T[][] a, T[] b){
         if (a[0].length != b.length){

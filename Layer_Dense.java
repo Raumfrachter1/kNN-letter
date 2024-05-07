@@ -61,17 +61,38 @@ public class Layer_Dense {
      * Methods
      * getNeurons()
      *      -> what do u guess ?
-     *
-     * yeah I will write down the rest later
+     * yes I will write down the rest later
      */
     public int getNeurons(){
         return neurons;
     }
 
+    /**
+     *
+     * forward is used if the next layer is a hidden layer
+     *
+     * forward_out is used if the next layer is the output layer. I will use the different methods to normalize my outputvector what isn't nessary at the hidden layers
+     *
+     */
     public Double[][] forward(Double[][] input){
-        Double[][] output = math.add(math.dot(input, weights), bias);
+        Double[][] output = math.add(math.dot(input, weights), biases);
+        return Activaction_function.sigmoid(output);
+    }
+    public Double[][] forward_out(Double[][] input){
+        Double[][] output = forward(input);
+        double sum = 0;
+        for (int i = 0; i < output.length; i++) {
+            for (int j = 0; j < output[0].length; j++){
+                sum += output[i][j];
+            }
+            for (int j = 0; j < output[0].length; j++){
+                output[i][j] /= sum;
+            }
+            sum = 0;
+        }
         return output;
     }
+
 
 
     private void setWeights_random(int input, int neurons){

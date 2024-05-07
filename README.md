@@ -2,7 +2,10 @@
 
 ## Done: 
 - Layer programmed
-- Activation_ReLU programmed 
+- Activaction_function programmed 
+- Output normalisieren: heißt sum of output = 1
+- Fehlerberechnung
+
 
 ## In Process 
 - atm u have to creat all the layers by your own. i want the possibility to creat a network with network(input, neurons_hiddenlayer1, ..., neurons_outputlayer)
@@ -11,9 +14,15 @@
 - i cant prove that my code works correct. 
 - - i try to creat a network manual but nothing worked. I have to thing about it nüchtern and with more sleep 
 
-## To-Do 
-- atm the hole input is one batch, but i want to be able to set the batch size by my own 
+## To-Do
+- Backpropagation
+- Batch Size selber bestimmen dürfen 
+- Aktivierungsfunktion freier setzen dürfen 
 
+### Logikanpassung
+
+
+### Zukunftsmusik
 - network.calculus(input, "No/Yes") should make it possible to activate or deactivate the backpropagation 
 
 ## logic atm 

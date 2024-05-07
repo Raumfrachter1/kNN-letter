@@ -1,41 +1,45 @@
+import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 public class main {
-    public static void main(String[] args) {
-        Double[][] X = new Double[][]{{1.0, 2.0, 3.0, 2.5},
-                                        {2.0, 5.0, -1.0, 2.0},
-                                        {-1.5, 2.7, 3.3, -0.8}};
-/**
-        Double[][] weights1 = new Double[][]{{0.2, 0.8, -0.5, 1.0},
-                                             {0.5, -0.91, 0.26, -0.5},
-                                             {-0.26, -0.27, 0.17, 0.87}};
 
-        Double[][] weights2 = new Double[][]{{0.1, -0.14, 0.5},
-                                             {-0.5, 0.12, -0.33},
-                                             {-0.44, 0.73, -0.13}};
+    public static void main(String[] args) throws IOException {
+        String path_img = "C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-images.idx3-ubyte";
+        String path_label = "C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-labels.idx1-ubyte";
+        try {
+            List<Double[][]> loadedImages = MNISTLoader.loadImages(path_img);
+            Double[][] X = new Double[loadedImages.size()][];
+            for (int i = 0; i < loadedImages.size(); i++) {
+                X[i] = flatten(loadedImages.get(i));
+            }
 
-        Double[] biases1 = new Double[]{2.0, 3.0, 0.5};
-        Double[] biases2 = new Double[]{-1.0, 2.0, -0.5};
+            List<Integer> loadedLabels = MNISTLoader.loadLabels(path_label);
+            Integer[] Y = loadedLabels.toArray(new Integer[0]);
 
-        network n2 = new network(new int[]{X[0].length, 3, 3},
-                                 new Double[][][]{math.transponieren(weights1), math.transponieren(weights2)},
-                                 new Double[][]{biases1, biases2});
 
-        show(n2.calculus(X));
-*/
-/**
-        Layer_Dense layer1 = new Layer_Dense(4,5);
-        Layer_Dense layer2 = new Layer_Dense(5,2);
+            network n1 = new network(new int[]{X[0].length, 6, 6, 10});
+            Double[][] X1 = {X[0], X[1]};
+            Double[][] results = n1.calculus(X1, Y);
+            show2D(results);
 
-        Double[][] output_layer1 = layer1.forward(X);
-        Double[][] output_layer2 = layer2.forward(output_layer1);
-        show(output_layer2);
-*/
-        network n1 = new network(new int[]{X[0].length, 5, 2});
-        show(n1.calculus(X));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void show(Double[][] show){
+    private static Double[] flatten(Double[][] image) {
+        Double[] flat = new Double[image.length * image[0].length];
+        int index = 0;
+        for (Double[] row : image) {
+            for (Double val : row) {
+                flat[index++] = val;
+            }
+        }
+        return flat;
+    }
+
+    public static <T extends Number> void show2D(T[][] show){
         for (int i = 0; i < show.length; i++){
             for (int j = 0; j < show[0].length; j++){
                 System.out.print(show[i][j] + " \t");
@@ -43,4 +47,69 @@ public class main {
             System.out.println("");
         }
     }
+    public static <T extends Number> void show1D(T[] show){
+        for (int i = 0; i < show.length; i++){
+            System.out.print(show[i] + " \t");
+        }
+    }
 }
+
+
+
+/**
+
+
+ Double[][] X = new Double[][]{{1.0, 2.0, 3.0, 2.5},
+ {2.0, 5.0, -1.0, 2.0},
+ {-1.5, 2.7, 3.3, -0.8}};
+ Integer[] Y = new Integer[]{1, 2, 0};
+
+ Double[][] weights1 = new Double[][]{{0.2, 0.8, -0.5, 1.0},
+ {0.5, -0.91, 0.26, -0.5},
+ {-0.26, -0.27, 0.17, 0.87}};
+ Double[][] weights2 = new Double[][]{{0.1, -0.14, 0.5},
+ {-0.5, 0.12, -0.33},
+ {-0.44, 0.73, -0.13}};
+
+ Double[] biases1 = new Double[]{2.0, 3.0, 0.5};
+ Double[] biases2 = new Double[]{-1.0, 2.0, -0.5};
+
+ network n2 = new network(new int[]{X[0].length, 3, 3},
+ new Double[][][]{math.transponieren(weights1), math.transponieren(weights2)},
+ new Double[][]{biases1, biases2});
+
+ show2D(n2.calculus(X));
+ show1D(n2.calculus(X, Y));
+
+
+
+ Double[][] X = new Double[][]{{1.0, 2.0, 3.0, 2.5},
+ {2.0, 5.0, -1.0, 2.0},
+ {-1.5, 2.7, 3.3, -0.8}};
+ */
+/**
+ Double[][] weights1 = new Double[][]{{0.2, 0.8, -0.5, 1.0},
+ {0.5, -0.91, 0.26, -0.5},
+ {-0.26, -0.27, 0.17, 0.87}};
+
+ Double[][] weights2 = new Double[][]{{0.1, -0.14, 0.5},
+ {-0.5, 0.12, -0.33},
+ {-0.44, 0.73, -0.13}};
+
+ Double[] biases1 = new Double[]{2.0, 3.0, 0.5};
+ Double[] biases2 = new Double[]{-1.0, 2.0, -0.5};
+
+ network n2 = new network(new int[]{X[0].length, 3, 3},
+ new Double[][][]{math.transponieren(weights1), math.transponieren(weights2)},
+ new Double[][]{biases1, biases2});
+
+ show(n2.calculus(X));
+ */
+/**
+ Layer_Dense layer1 = new Layer_Dense(4,5);
+ Layer_Dense layer2 = new Layer_Dense(5,2);
+
+ Double[][] output_layer1 = layer1.forward(X);
+ Double[][] output_layer2 = layer2.forward(output_layer1);
+ show(output_layer2);
+ */

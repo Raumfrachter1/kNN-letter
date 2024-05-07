@@ -1,3 +1,7 @@
+import java.util.Arrays;
+import java.util.Objects;
+import java.math.*;
+
 public class network {
     private Layer_Dense[] net;
 
@@ -88,13 +92,48 @@ public class network {
      * @return Values of the Outputlayer
      *
      */
+
     public Double[][] calculus (Double[][] input){
         Double[][][] output = new Double[net.length][][];
         output[0] = input;
 
-        for (int i = 1; i < net.length; i++){
+        for (int i = 1; i < net.length-1; i++){
             output[i] = net[i].forward(output[i-1]);
         }
+        output[net.length-1] = net[net.length-1].forward_out(output[net.length-2]);
+
+        return output[net.length-1];
+    }
+
+    public Double[][] calculus (Double[][] X, Integer[] Y){
+        /**
+         * Attribute
+         * Double[][][] output = new Double[number of layer]
+         *                                 [number of inputs at the same time(Batchsize)]
+         *                                 [length of the input vector]
+         * Double[][] loss = new Double [Batch]
+         *
+         */
+        Double[][][] output = new Double[net.length][][];
+
+        // Forward
+        output[0] = X;
+        for (int i = 1; i < net.length-1; i++){
+            output[i] = net[i].forward(output[i-1]);
+        }
+        output[net.length-1] = net[net.length-1].forward_out(output[net.length-2]);
+
+        Double[] loss = new Double[output[0].length];
+        Arrays.fill(loss, 0.0);
+
+        //calc loss
+        for (int i = 0; i < output[net.length-1].length; i++) {
+            for (int j = 0; j < output[net.length - 1][0].length; j++) {
+                loss[i] = -Math.log(output[net.length - 1][i][Y[i]]);
+            }
+        }
+
+        //backpropagation
 
         return output[net.length-1];
     }
