@@ -53,18 +53,5 @@ public class MNISTLoader {
         return labels;
     }
 
-    /**
-    public static void main(String[] args) {
-        try {
-            List<double[][]> trainImages = loadImages("C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-images.idx3-ubyte");
-            List<Integer> trainLabels = loadLabels("C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-labels.idx1-ubyte");
-
-            System.out.println("Loaded " + trainImages.size() + " images and " + trainLabels.size() + " labels.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-     */
-
 }
 

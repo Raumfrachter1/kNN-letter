@@ -5,8 +5,6 @@ public class Layer_Dense {
     //Attribute
     private Double[][] weights;
     private Double bias;
-    private Double[] biases;
-
     private Double[] delta;
     private Double[][] net;
 
@@ -18,14 +16,6 @@ public class Layer_Dense {
      * To Use:
      * Layer_Dense(int input, int neurons)
      *      -> usual case. bias 0, weights random
-     *
-     * Testing your network:
-     * Layer_Dense(int input, int neurons, Double[][] weights)
-     *      -> set weights by your own
-     * Layer_Dense(int input, int neurons, Double[][] weights, Double bias)
-     *      -> set weights and bias by yourself, Bias is a skalar
-     * Layer_Dense(int input, int neurons, Double[][] weights, Double[] biases)
-     *      -> set weights and bias by yourself. Bias is a vector
      */
     Layer_Dense(int input, int neurons){ // input is the size of the prev. Layer and neurons is the size of the new Layer
         weights = new Double[input][neurons];
@@ -34,24 +24,6 @@ public class Layer_Dense {
         bias = rand.nextDouble(0,1);
         delta = new Double[neurons];
     }
-    Layer_Dense(int input, int neurons, Double[][] weights){
-        this.weights = weights;
-        Random rand = new Random();
-        bias = rand.nextDouble(0,1);
-        delta = new Double[neurons];
-    }
-    Layer_Dense(int input, int neurons, Double[][] weights, Double bias){
-        this.weights = weights;
-        this.bias = bias;
-        delta = new Double[neurons];
-    }
-    Layer_Dense(int input, int neurons, Double[][] weights, Double[] biases){
-        this.weights = weights;
-        this.biases = biases;
-        delta = new Double[neurons];
-    }
-
-
 
 
     /**
@@ -75,16 +47,6 @@ public class Layer_Dense {
                 this.weights[i][j] = rand.nextDouble(-1,1);
             }
         }
-    }
-
-    private void setWeights(Double[][] weights){
-        if (this.weights.length != weights.length || this.weights[0].length != weights[0].length){
-            System.out.println("You have the following Dimensions: " +
-                    "(" + this.weights.length + ", " + this.weights[0].length + ") and (" + weights.length + ", " + weights[0].length + ").");
-            throw new IllegalArgumentException("Dimension of your weights are incorrect.");
-        }
-
-        this.weights = weights;
     }
 
     public void updateWeights(Double[][] weightUpdate) {
