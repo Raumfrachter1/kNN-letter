@@ -5,8 +5,59 @@ import java.util.Random;
 public class main {
 
     public static void main(String[] args) throws IOException {
-        String path_img = "C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-images.idx3-ubyte";
-        String path_label = "C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-labels.idx1-ubyte";
+        //testExcel();
+        testMNIST();
+        //testVideo();
+
+    }
+
+    private static void testExcel(){
+        Double[][] X = {{1.0, 0.0, 0.0}};
+
+        Double[][] weights1 = {{-0.081, 0.06, -0.01},
+                               {0.08, 0.02, 0.003},
+                               {-0.04, -0.003, -0.09}};
+        Double[][] weights2 = {{-0.008, 0.06, 0.04},
+                               {0.01, -0.06, 0.06},
+                               {0.01, -0.027, 0.08},
+                               {0.00029, -0.01, 0.08}};
+
+        Double[] biases1 = new Double[]{0.08, -0.09, -0.05};
+        Double[] biases2 = new Double[]{-0.08, 0.06, 0.09, -0.001};
+
+        network n2 = new network(new int[]{X[0].length, 3, 4},
+                new Double[][][]{math.transponieren(weights1), math.transponieren(weights2)},
+                new Double[][]{biases1, biases2});
+
+        show2D(n2.calculus(X));
+    }
+
+    public static void testVideo(){
+
+        Double[][] X = new Double[][]{{1.0, 2.0, 3.0, 2.5},
+                {2.0, 5.0, -1.0, 2.0},
+                {-1.5, 2.7, 3.3, -0.8}};
+        Integer[] Y = new Integer[]{1, 2, 0};
+
+        Double[][] weights1 = new Double[][]{{0.2, 0.8, -0.5, 1.0},
+                {0.5, -0.91, 0.26, -0.5},
+                {-0.26, -0.27, 0.17, 0.87}};
+        Double[][] weights2 = new Double[][]{{0.1, -0.14, 0.5},
+                {-0.5, 0.12, -0.33},
+                {-0.44, 0.73, -0.13}};
+
+        Double[] biases1 = new Double[]{2.0, 3.0, 0.5};
+        Double[] biases2 = new Double[]{-1.0, 2.0, -0.5};
+
+        network n2 = new network(new int[]{X[0].length, 3, 3},
+                new Double[][][]{math.transponieren(weights1), math.transponieren(weights2)},
+                new Double[][]{biases1, biases2});
+
+    }
+
+    public static void testMNIST() throws IOException {
+        String path_img = "C:\\Users\\Philipp\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-images.idx3-ubyte";
+        String path_label = "C:\\Users\\Philipp\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-labels.idx1-ubyte";
         try {
             List<Double[][]> loadedImages = MNISTLoader.loadImages(path_img);
             Double[][] X = new Double[loadedImages.size()][];
@@ -18,10 +69,11 @@ public class main {
             Integer[] Y = loadedLabels.toArray(new Integer[0]);
 
 
-            network n1 = new network(new int[]{X[0].length, 6, 6, 10});
             Double[][] X1 = {X[0], X[1]};
-            Double[][] results = n1.calculus(X1, Y);
-            show2D(results);
+            Integer[] Y1 = {Y[0], Y[1]};
+
+            network n1 = new network(new int[]{784, 6, 6, 10});
+            n1.calculus(X1, Y1);
 
         } catch (IOException e) {
             e.printStackTrace();

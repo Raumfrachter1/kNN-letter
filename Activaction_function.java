@@ -35,4 +35,21 @@ public class Activaction_function {
         }
         return output;
     }
+
+    public static Double[][] sigmoidDerivative(Double[][] output) {
+        Double[][] result = new Double[output.length][output[0].length];
+        for (int i = 0; i < output.length; i++) {
+            for (int j = 0; j < output[0].length; j++) {
+                result[i][j] = output[i][j] * (1 - output[i][j]);
+            }
+        }
+        return result;
+    }
+    public static Double[] sigmoidDerivative(Double[] output) {
+        Double[] result = new Double[output.length];
+        for (int i = 0; i < output.length; i++) {
+                result[i] = output[i] * (1 - output[i]);
+        }
+        return result;
+    }
 }

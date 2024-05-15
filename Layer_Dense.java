@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 public class Layer_Dense {
@@ -5,8 +6,11 @@ public class Layer_Dense {
     private Double[][] weights;
     private Double bias;
     private Double[] biases;
-    private int input;
-    private int neurons;
+
+    private Double[] delta;
+    private Double[][] net;
+
+
 
     /**
      * Konstruktoren
@@ -26,46 +30,29 @@ public class Layer_Dense {
     Layer_Dense(int input, int neurons){ // input is the size of the prev. Layer and neurons is the size of the new Layer
         weights = new Double[input][neurons];
         setWeights_random(input, neurons);
-        this.input = input;
-        this.neurons = neurons;
-        bias = 0.0;
+        Random rand = new Random();
+        bias = rand.nextDouble(0,1);
+        delta = new Double[neurons];
     }
     Layer_Dense(int input, int neurons, Double[][] weights){
-        //this.weights = new Double[input][neurons];
-        //setWeights(weights);
         this.weights = weights;
-        this.input = input;
-        this.neurons = neurons;
-        bias = 0.0;
+        Random rand = new Random();
+        bias = rand.nextDouble(0,1);
+        delta = new Double[neurons];
     }
     Layer_Dense(int input, int neurons, Double[][] weights, Double bias){
-        //this.weights = new Double[input][neurons];
-        //setWeights(weights);
         this.weights = weights;
-        this.input = input;
-        this.neurons = neurons;
         this.bias = bias;
+        delta = new Double[neurons];
     }
     Layer_Dense(int input, int neurons, Double[][] weights, Double[] biases){
-        //this.weights = new Double[input][neurons];
-        //setWeights(weights);
         this.weights = weights;
-        this.input = input;
-        this.neurons = neurons;
         this.biases = biases;
+        delta = new Double[neurons];
     }
 
 
-    /**
-     *
-     * Methods
-     * getNeurons()
-     *      -> what do u guess ?
-     * yes I will write down the rest later
-     */
-    public int getNeurons(){
-        return neurons;
-    }
+
 
     /**
      *
@@ -75,24 +62,10 @@ public class Layer_Dense {
      *
      */
     public Double[][] forward(Double[][] input){
-        Double[][] output = math.add(math.dot(input, weights), biases);
-        return Activaction_function.sigmoid(output);
+        net = new Double[input.length][input[0].length];
+        this.net = math.add(math.dot(input, weights), bias);
+        return Activaction_function.sigmoid(net);
     }
-    public Double[][] forward_out(Double[][] input){
-        Double[][] output = forward(input);
-        double sum = 0;
-        for (int i = 0; i < output.length; i++) {
-            for (int j = 0; j < output[0].length; j++){
-                sum += output[i][j];
-            }
-            for (int j = 0; j < output[0].length; j++){
-                output[i][j] /= sum;
-            }
-            sum = 0;
-        }
-        return output;
-    }
-
 
 
     private void setWeights_random(int input, int neurons){
@@ -112,5 +85,29 @@ public class Layer_Dense {
         }
 
         this.weights = weights;
+    }
+
+    public void updateWeights(Double[][] weightUpdate) {
+        for (int i = 0; i < weights.length; i++) {
+            for (int j = 0; j < weights[i].length; j++) {
+                weights[i][j] -= weightUpdate[i][j]; // Update weights using gradient descent
+            }
+        }
+    }
+
+    public Double[][] getWeights() {
+        return weights;
+    }
+
+    public Double[] getDelta(){
+        return delta;
+    }
+
+    public void setDelta(Double[] a){
+        delta = a;
+    }
+
+    public Double[][] getNet(){
+        return this.net;
     }
 }

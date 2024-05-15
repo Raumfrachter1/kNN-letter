@@ -1,10 +1,6 @@
-import java.util.Arrays;
-import java.util.Objects;
-import java.math.*;
-
 public class network {
     private Layer_Dense[] net;
-
+    private double learningRate = 0.01;
     /**
      * Konstruktoren
      *
@@ -29,11 +25,11 @@ public class network {
     }
     network(int[] neurons, Double[][][] weights){
         net = new Layer_Dense[neurons.length];
-        create_networt(neurons, weights);
+        create_network(neurons, weights);
     }
     network(int[] neurons, Double[][][] weights, Double[][] biases){
         net = new Layer_Dense[neurons.length];
-        create_networt(neurons, weights, biases);
+        create_network(neurons, weights, biases);
     }
 
 
@@ -51,34 +47,16 @@ public class network {
      *      ->
      */
     private void create_network(int[] neurons){
-        net[0] = new Layer_Dense(1, neurons[0]);
         for (int i = 1; i < net.length; i++){
             net[i] = new Layer_Dense(neurons[i-1], neurons[i]);
         }
     }
-    private void create_networt(int[] neurons, Double[][][] weights){
-        net[0] = new Layer_Dense(1, neurons[0]);
+    private void create_network(int[] neurons, Double[][][] weights){
         for (int i = 1; i < net.length; i++){
             net[i] = new Layer_Dense(neurons[i-1], neurons[i], weights[i-1]);
         }
     }
-    private void create_networt(int[] neurons, Double[][][] weights, Double[][] biases){
-        /**
-         * i cant explain why i coded it like this, but the weights and biases of n[0] have no usage.
-         * To get no problems with my code i build weights and biases of the correct size (?)
-         *
-         * i rly should figure out what i did there ...
-         * okay didnt fix the problem xD
-         */
-        Double[][] dummy_weights = new Double[weights.length][weights[0].length];
-        Double[] dummy_biases = new Double[weights[0].length];
-        for (int j = 0; j < weights.length; j++) {
-            for (int i = 0; i < dummy_biases.length; i++) {
-                dummy_biases[i] = 0.0;
-                dummy_weights[j][i] = 0.0;
-            }
-        }
-        net[0] = new Layer_Dense(1, neurons[0], dummy_weights, dummy_biases);
+    private void create_network(int[] neurons, Double[][][] weights, Double[][] biases){
         for (int i = 1; i < net.length; i++){
             net[i] = new Layer_Dense(neurons[i-1], neurons[i], weights[i-1], biases[i-1]);
         }
@@ -97,44 +75,97 @@ public class network {
         Double[][][] output = new Double[net.length][][];
         output[0] = input;
 
-        for (int i = 1; i < net.length-1; i++){
+        for (int i = 1; i < net.length; i++){
             output[i] = net[i].forward(output[i-1]);
         }
-        output[net.length-1] = net[net.length-1].forward_out(output[net.length-2]);
 
         return output[net.length-1];
     }
 
-    public Double[][] calculus (Double[][] X, Integer[] Y){
+    public void calculus (Double[][] X, Integer[] Y){
         /**
          * Attribute
          * Double[][][] output = new Double[number of layer]
          *                                 [number of inputs at the same time(Batchsize)]
-         *                                 [length of the input vector]
+         *                                 [length of the output (i hope vorher stand da input) vector]
          * Double[][] loss = new Double [Batch]
          *
          */
         Double[][][] output = new Double[net.length][][];
 
-        // Forward
-        output[0] = X;
-        for (int i = 1; i < net.length-1; i++){
-            output[i] = net[i].forward(output[i-1]);
+        for (int k = 0; k < 100; k++) {
+            // Forward
+            output[0] = X;
+            for (int i = 1; i < net.length; i++) {
+                output[i] = net[i].forward(output[i - 1]);
+            }
+
+            //print loss
+            double loss = 0.0;
+            for (int i = 0; i < output[0].length; i++){
+                for(int j = 0; j < output[0].length; j++){
+                    //System.out.printf("  " + output[net.length-1][i][j]);
+                    loss += (output[net.length-1][i][j] - Y[i])* (output[net.length-1][i][j] - Y[i]);
+                }
+            }
+            loss /= 2;
+            System.out.println("Epoche " + k + " loss: " + loss/output[0].length);
+
+            //Backpropagation
+            //1. Calc Loss for BP
+            loss = 0.0;
+            for (int i = 0; i < output[0].length; i++){
+                for(int j = 0; j < output[0].length; j++){
+                    //System.out.printf("  " + output[net.length-1][i][j]);
+                    loss += (output[net.length-1][i][j] - Y[i]);
+                }
+            }
+            loss /= output[0].length;
+
+            net[net.length-1].setDelta(Activaction_function.sigmoidDerivative(net[net.length-1].getNet()));
         }
-        output[net.length-1] = net[net.length-1].forward_out(output[net.length-2]);
+    }
 
-        Double[] loss = new Double[output[0].length];
-        Arrays.fill(loss, 0.0);
+    /**
+     *
+     * @param predicted
+     * @param actual
+     * @return 1/2 sum_{all output}(actual-predicted)
+     * Loss Function is based on the loss function Wikipedia explained
+     */
+    public static double calculateLoss(Double[][] predicted, Double[][] actual) {
+        double loss = 0.0;
+        int samples = predicted.length;
+        int outputs = predicted[0].length;
 
-        //calc loss
-        for (int i = 0; i < output[net.length-1].length; i++) {
-            for (int j = 0; j < output[net.length - 1][0].length; j++) {
-                loss[i] = -Math.log(output[net.length - 1][i][Y[i]]);
+        for (int i = 0; i < samples; i++) {
+            for (int j = 0; j < outputs; j++) {
+                double error = actual[i][j] - predicted[i][j];
+                loss += error * error;
             }
         }
 
-        //backpropagation
+        return loss / 2;
+    }
 
-        return output[net.length-1];
+    public void backpropagation(Double[][] inputs, Double[][] expectedOutputs) {
+        // Schritt 1: Forward Pass
+        Double[][][] layerOutputs = new Double[net.length][][];
+        layerOutputs[0] = inputs;
+        for (int i = 1; i < net.length; i++) {
+            layerOutputs[i] = net[i].forward(layerOutputs[i - 1]);
+        }
+
+        // Schritt 2: Loss Berechnung (bereits vorhanden)
+
+        // Schritt 3: Backward Pass
+        Double[][] error = math.subtract(layerOutputs[net.length - 1], expectedOutputs); // Fehler am Ausgang
+        for (int i = net.length - 1; i > 0; i--) {
+            Double[][] delta = math.dot(error, Activaction_function.sigmoidDerivative(layerOutputs[i])); // Delta für aktuelle Schicht
+            Double[][] gradient = math.dot(math.transponieren(layerOutputs[i - 1]), delta); // Gradientenberechnung
+            Double[][] weightUpdate = math.dot(gradient, learningRate);
+            net[i].updateWeights(weightUpdate);
+            error = math.dot(delta, math.transponieren(net[i].getWeights()));
+        }
     }
 }

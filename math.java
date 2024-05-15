@@ -39,11 +39,12 @@ public class math {
         if (a[0].length != b.length){
             throw new IllegalArgumentException("Value Error: shape (" + a[0].length + ", " + a[0].length + ") and " + b.length + " doesnt fit.");
         }
-        Double[][] output = new Double[a.length][b[0].length];
+        Double[][] output = new Double[0][0];
+        output = new Double[a.length][b[0].length];
         double tmp = 0;
-        for (int i = 0; i < a.length; i++){
-            for (int j = 0; j < b[0].length; j++){
-                for(int k = 0; k < b.length; k++){
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b[0].length; j++) {
+                for (int k = 0; k < b.length; k++) {
                     tmp += a[i][k].doubleValue() * b[k][j].doubleValue();
                 }
                 output[i][j] = tmp;
@@ -52,6 +53,8 @@ public class math {
         }
         return output;
     }
+
+
     //Case 4: If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
     public static <T extends Number> Double[] dot(T[][] a, T[] b){
         if (a[0].length != b.length){
@@ -67,6 +70,15 @@ public class math {
         return result;
     }
 
+    public static <T extends Number> Double[][] dot(T[][] a, T b){
+        Double[][] output = new Double[a.length][a[0].length];
+        for(int i = 0; i < a.length; i++){
+            for (int j = 0; j < a[0].length; j++){
+                output[i][j] = a[i][j].doubleValue() * b.doubleValue();
+            }
+        }
+        return output;
+    }
 
     /**
      * Addition von Matrixen und Vektoren
@@ -115,11 +127,21 @@ public class math {
         }
 
         Double[][] output = new Double[a.length][a[0].length];
-        for (int i = 0; i < a[0].length; i++){
+        for (int i = 0; i < a.length; i++){
             output[i] = add(a[i], b);
         }
 
         return output;
+    }
+
+    public static Double[][] subtract(Double[][] a, Double[][] b) {
+        Double[][] result = new Double[a.length][a[0].length];
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a[0].length; j++) {
+                result[i][j] = a[i][j] - b[i][j];
+            }
+        }
+        return result;
     }
     /**
      * Matrix Transponation
