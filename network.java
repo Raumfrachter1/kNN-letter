@@ -122,7 +122,7 @@ public class network {
             }
             loss /= output[0].length;
 
-            net[net.length-1].setDelta(Activaction_function.sigmoidDerivative(net[net.length-1].getNet()));
+            //net[net.length-1].setDelta(Activaction_function.sigmoidDerivative(net[net.length-1].getNet()));
         }
     }
 
