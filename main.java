@@ -7,7 +7,30 @@ import java.util.Random;
 public class main {
 
     public static void main(String[] args) throws IOException {
+        testExcel();
         testMNIST();
+    }
+
+    private static void testExcel(){
+        Double[][] X ={{1.0, 0.0, 0.0}};
+        Double[] Y = {1.0, 0.0, 0.0, 0.0};
+
+        Double[][] weights1 = {{-0.081, 0.06, -0.01},
+                {0.08, 0.02, 0.003},
+                {-0.04, -0.003, -0.09}};
+        Double[][] weights2 = {{-0.008, 0.06, 0.04},
+                {0.01, -0.06, 0.06},
+                {0.01, -0.027, 0.08},
+                {0.00029, -0.01, 0.08}};
+
+        Double[] biases1 = new Double[]{0.08, -0.09, -0.05};
+        Double[] biases2 = new Double[]{-0.08, 0.06, 0.09, -0.001};
+
+        network n2 = new network(new int[]{X.length, 3, 4},
+                new Double[][][]{math.transponieren(weights1), math.transponieren(weights2)},
+                new Double[][]{biases1, biases2});
+
+        show2D(n2.calculus(X));
     }
 
     public static void testMNIST() {
@@ -34,7 +57,12 @@ public class main {
             Double[][] Y1 = {Y[0], Y[1]};
 
             network n1 = new network(new int[]{784, 6, 6, 10});
-            n1.calculus(X1, Y1);
+            long startTime = System.nanoTime();
+            for (int i = 0; i < 100; i++) {
+                n1.calculus(X);
+            }
+            long endTime = System.nanoTime();
+            System.out.println("Elapsed time in nanoseconds: " + (endTime-startTime));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,4 +79,21 @@ public class main {
         }
         return flat;
     }
+
+
+    public static <T extends Number> void show1D(T[] show){
+        for (int i = 0; i < show.length; i++){
+            System.out.print(show[i] + " \t");
+        }
+    }
+
+    public static <T extends Number> void show2D(T[][] show){
+        for (int i = 0; i < show.length; i++){
+            for (int j = 0; j < show[0].length; j++){
+                System.out.print(show[i][j] + " \t");
+            }
+            System.out.println("");
+        }
+    }
 }
+

@@ -4,9 +4,10 @@ import java.util.Random;
 public class Layer_Dense {
     //Attribute
     private Double[][] weights;
-    private Double bias;
+    private Double[] biases;
     private Double[] delta;
     private Double[][] net;
+    private Double[][] out;
 
 
 
@@ -20,11 +21,16 @@ public class Layer_Dense {
     Layer_Dense(int input, int neurons){ // input is the size of the prev. Layer and neurons is the size of the new Layer
         weights = new Double[input][neurons];
         setWeights_random(input, neurons);
-        Random rand = new Random();
-        bias = rand.nextDouble(0,1);
+        biases = new Double[neurons];
+        setBiasese_random(neurons);
         delta = new Double[neurons];
     }
 
+    Layer_Dense(int input, int neurons, Double[][] weights, Double[] biases){
+        this.weights = weights;
+        this.biases = biases;
+        delta = new Double[neurons];
+    }
 
     /**
      *
@@ -33,12 +39,24 @@ public class Layer_Dense {
      * forward_out is used if the next layer is the output layer. I will use the different methods to normalize my outputvector what isn't nessary at the hidden layers
      *
      */
-    public Double[][] forward(Double[][] input){
+    public Double[][] forward(Double[][] input){ //Batchsize < 1
         net = new Double[input.length][input[0].length];
-        this.net = math.add(math.dot(input, weights), bias);
-        return Activaction_function.sigmoid(net);
+        this.net = math.add(math.dot(input, weights), biases);
+        this.out = Activaction_function.sigmoid(net);
+        return this.out;
     }
 
+    public Double[] forward(Double[] input){
+        net = new Double[1][weights[0].length];
+        this.net[0]= math.add(math.dot(weights, input), biases);
+        out = new Double[1][weights[0].length];
+        this.out = Activaction_function.sigmoid(net);
+        return this.out[0];
+    }
+
+    public void backward(Double[][] Y, Double[][] output){
+
+    }
 
     private void setWeights_random(int input, int neurons){
         Random rand = new Random();
@@ -46,6 +64,13 @@ public class Layer_Dense {
             for(int j = 0; j < neurons; j++){
                 this.weights[i][j] = rand.nextDouble(-1,1);
             }
+        }
+    }
+
+    private void setBiasese_random(int neurons){
+        Random rand = new Random();
+        for (int i = 0; i < neurons; i++){
+            this.biases[i] = rand.nextDouble(-1,1);
         }
     }
 

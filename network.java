@@ -9,6 +9,11 @@ public class network {
         create_network(neurons);
     }
 
+    network(int[] neurons, Double[][][] weights, Double[][] biases){
+        net = new Layer_Dense[neurons.length];
+        create_network(neurons, weights, biases);
+    }
+
 
     /**
      *
@@ -26,6 +31,12 @@ public class network {
     private void create_network(int[] neurons){
         for (int i = 1; i < net.length; i++){
             net[i] = new Layer_Dense(neurons[i-1], neurons[i]);
+        }
+    }
+
+    private void create_network(int[] neurons, Double[][][] weights, Double[][] bias){
+        for (int i = 1; i < net.length; i++){
+            net[i] = new Layer_Dense(neurons[i-1], neurons[i], weights[i-1], bias[i-1]);
         }
     }
     /**
@@ -79,6 +90,26 @@ public class network {
             //BP Hidden Layer
 
         }
+    }
+
+    public void calculus(Double[] x, Double[] y){
+
+        for (int i = 0; i < 100; i++){
+            for (int j = 1; j < net.length; j++) {
+                net[j].forward(x);
+            }
+        }
+    }
+
+    public Double[][] calculus(Double[][] x){
+        Double[][][] output = new Double[net.length][][];
+        output[0] = x;
+
+        for (int i = 1; i < net.length; i++){
+            output[i] = net[i].forward(output[i-1]);
+        }
+
+        return output[net.length-1];
     }
 
     /**
