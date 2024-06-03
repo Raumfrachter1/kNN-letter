@@ -8,6 +8,7 @@ public class Layer_Dense {
     private Double[] delta;
     private Double[][] net;
     private Double[][] out;
+    private Double eta;
 
 
 
@@ -55,7 +56,13 @@ public class Layer_Dense {
     }
 
     public void backward(Double[][] Y, Double[][] output){
+        double sum = 0.0;
+        for(int j = 0; j < net[0].length; j++) {
 
+            for (int i = 0; i < delta.length; i++) {
+              //  this.delta[i] = Activaction_function.sigmoidDerivative();
+            }
+        }
     }
 
     private void setWeights_random(int input, int neurons){

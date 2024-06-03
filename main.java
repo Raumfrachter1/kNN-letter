@@ -8,7 +8,7 @@ public class main {
 
     public static void main(String[] args) throws IOException {
         testExcel();
-        testMNIST();
+       // testMNIST();
     }
 
     private static void testExcel(){
