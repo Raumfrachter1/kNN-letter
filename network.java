@@ -133,26 +133,4 @@ public class network {
 
         return loss / 2;
     }
-
-    //ANPASSEN !
-    public void backpropagation(Double[][] inputs, Double[][] expectedOutputs) {
-        // Schritt 1: Forward Pass
-        Double[][][] layerOutputs = new Double[net.length][][];
-        layerOutputs[0] = inputs;
-        for (int i = 1; i < net.length; i++) {
-            layerOutputs[i] = net[i].forward(layerOutputs[i - 1]);
-        }
-
-        // Schritt 2: Loss Berechnung (bereits vorhanden)
-
-        // Schritt 3: Backward Pass
-        Double[][] error = math.subtract(layerOutputs[net.length - 1], expectedOutputs); // Fehler am Ausgang
-        for (int i = net.length - 1; i > 0; i--) {
-            Double[][] delta = math.dot(error, Activaction_function.sigmoidDerivative(layerOutputs[i])); // Delta für aktuelle Schicht
-            Double[][] gradient = math.dot(math.transponieren(layerOutputs[i - 1]), delta); // Gradientenberechnung
-            Double[][] weightUpdate = math.dot(gradient, learningRate);
-            net[i].updateWeights(weightUpdate);
-            error = math.dot(delta, math.transponieren(net[i].getWeights()));
-        }
-    }
 }

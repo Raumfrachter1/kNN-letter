@@ -70,6 +70,43 @@ public class math {
         return result;
     }
 
+    public static <T extends Number> Double[][] convolutional(T[][] matrix, T[][] filter){
+        //
+        if ((filter.length != filter[0].length) || (filter.length % 2 == 0)){
+            throw new IllegalArgumentException("Dein Filter ist scheiße. Fehlermeldung verbessern");
+        }
+
+        // Auffüllen mit nullen
+        int len = filter.length/2;
+        Double[][] tmp = new Double[matrix.length + filter.length - 1][matrix[0].length + filter.length - 1];
+        Double[][] out = new Double[matrix.length][matrix[0].length];
+
+        for (int i = 0; i < tmp.length; i++){
+            for (int j = 0; j < tmp[0].length; j++){
+                if (i < len || i >= matrix.length + len || j < len || j >= matrix[0].length + len){
+                    tmp[i][j] = 0.0;
+                }
+                else {
+                    tmp[i][j] = matrix[i-len][j-len].doubleValue();
+                }
+            }
+        }
+
+        //Berechnen - geht schöner, hatte ich aber keine Lust drauf.
+        for (int i = 0; i < out.length; i++){
+            for (int j = 0; j < out[0].length; j++){
+                double sum = 0;
+                for(int k = 0; k < filter.length; k++){
+                    for (int l = 0; l < filter[0].length; l++){
+                        sum += filter[k][l].doubleValue() * tmp[i+k][j+l];
+                    }
+                }
+                out[i][j] = sum;
+            }
+        }
+        return out;
+    }
+
     public static <T extends Number> Double[][] dot(T[][] a, T b){
         Double[][] output = new Double[a.length][a[0].length];
         for(int i = 0; i < a.length; i++){

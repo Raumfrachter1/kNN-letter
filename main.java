@@ -7,8 +7,9 @@ import java.util.Random;
 public class main {
 
     public static void main(String[] args) throws IOException {
-        testExcel();
-        testMNIST();
+        Double[][] matrix = new Double[][]{{1.0,1.0,1.0},{1.0,1.0,1.0},{1.0,1.0,1.0}};
+        Double[][] filter = new Double[][]{{0.0, -1.0, 0.0},{-1.0, 5.0, -1.0},{0.0, -1.0, 0.0}};
+        show2D(math.convolutional(matrix,filter));
     }
 
     private static void testExcel(){
@@ -34,8 +35,8 @@ public class main {
     }
 
     public static void testMNIST() {
-        String path_img = "C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-images.idx3-ubyte";
-        String path_label = "C:\\Users\\Philipp Schneider\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-labels.idx1-ubyte";
+        String path_img = "C:\\Users\\Philipp\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-images.idx3-ubyte";
+        String path_label = "C:\\Users\\Philipp\\OneDrive - smail.inf.h-brs.de\\Studium\\Studieren und so\\SS24\\Projektseminar\\Dataset\\archive\\train-labels.idx1-ubyte";
         try {
             List<Double[][]> loadedImages = MNISTLoader.loadImages(path_img);
             Double[][] X = new Double[loadedImages.size()][];
