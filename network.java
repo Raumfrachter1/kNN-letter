@@ -37,15 +37,17 @@ public class network {
      */
 
     public void train(Double[][] X, Double[][] Y) {
-        for (int j = 0; j < 1000000000; j++) {
+        int episoden = 1000000000;
+        for (int j = 0; j < episoden; j++) {
             // Forward
             net[0].setOut(X);
             for (int i = 1; i < net.length; i++) {
                 net[i].forward(net[i - 1].getOut());
             }
             //Loss
-            if (j % 10 == 0) {
+            if (j % 100 == 0) {
                 net[net.length - 1].printLoss(Y);
+                System.out.println(" Fortschritt: "j/episoden * 100 + "%");
             }
 
             //Backward

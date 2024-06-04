@@ -131,7 +131,7 @@ public class Layer_Dense {
             }
         }
 
-        System.out.println(sum/2);
+        System.out.print(sum/2);
     }
 
     private void setWeights_random(int input, int neurons){
