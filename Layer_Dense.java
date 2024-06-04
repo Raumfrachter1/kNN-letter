@@ -59,6 +59,7 @@ public class Layer_Dense {
         batchSize = out.length;
         delta = new Double[batchSize][out[0].length];
 
+        double sumOfDeltas;
         double derivativOfTheLoss;
         double derivativOfTheActivactionFunction;
         Double[][][] deltaweights = new Double[batchSize][out[0].length][outPrev[0].length];
@@ -78,7 +79,11 @@ public class Layer_Dense {
 
         for (int i = 0; i < outPrev[0].length; i++){
             for (int j = 0; j < out[0].length; j++){
-                weights[i][j] += math.averageOfAVector(deltaweights[i][j]);
+                sumOfDeltas = 0.0;
+                for (int k = 0; k < batchSize; k++){
+                    sumOfDeltas += deltaweights[i][j][k];
+                }
+                weights[i][j] = sumOfDeltas/batchSize;
             }
         }
     }
@@ -92,7 +97,6 @@ public class Layer_Dense {
         Double[][][] deltaweights = new Double[batchSize][out[0].length][outPrev[0].length];
 
         for (int j = 0; j < batchSize; j++){
-            sumOfDeltas = 0.0;
             derivativOfTheActivactionFunction = 0.0;
             for (int i = 0; i < out[0].length; i++){
                 sumOfDeltas = 0.0;
@@ -109,7 +113,11 @@ public class Layer_Dense {
 
         for (int i = 0; i < outPrev[0].length; i++){
             for (int j = 0; j < out[0].length; j++){
-                weights[i][j] += math.averageOfAVector(deltaweights[i][j]);
+                sumOfDeltas = 0.0;
+                for (int k = 0; k < batchSize; k++){
+                    sumOfDeltas += deltaweights[i][j][k];
+                }
+                weights[i][j] = sumOfDeltas/batchSize;
             }
         }
     }
