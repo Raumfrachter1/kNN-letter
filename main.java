@@ -30,9 +30,13 @@ public class main {
                 Y[i][Y_preprep[i]] = 1.0;
             }
 
-            Double[][] X1 = {X[0], X[1]};
-            Double[][] Y1 = {Y[0], Y[1]};
+            Double[][] X1 = new Double[1000][X[0].length];
+            Double[][] Y1 = new Double[1000][Y[0].length];
 
+            for (int i = 0; i < X1.length; i++){
+                X1[i] = X[i];
+                Y1[i] = Y[i];
+            }
             network n1 = new network(new int[]{784, 6, 6, 10});
             long startTime = System.nanoTime();
 
