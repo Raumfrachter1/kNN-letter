@@ -40,6 +40,7 @@ public class network {
     public void train(Double[][] X, Double[][] Y) {
         int episoden = 10000000;
         loss = new Double[100000];
+        double progress;
         for (int j = 0; j < episoden; j++) {
             // Forward
             net[0].setOut(X);
@@ -49,7 +50,8 @@ public class network {
             //Loss
             if (j % 100 == 0) {
                 loss[episoden/j] = net[net.length - 1].printLoss(Y);
-                System.out.println(loss[episoden/j] + " Fortschritt: " + j/episoden*100);
+                progress = j/episoden*100;
+                System.out.println(loss[episoden/j] + " Fortschritt: " + progress);
             }
 
             //Backward
