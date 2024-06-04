@@ -81,9 +81,9 @@ public class Layer_Dense {
             for (int j = 0; j < out[0].length; j++){
                 sumOfDeltas = 0.0;
                 for (int k = 0; k < batchSize; k++){
-                    sumOfDeltas += deltaweights[i][j][k];
+                    sumOfDeltas += deltaweights[k][j][i];
                 }
-                weights[i][j] = sumOfDeltas/batchSize;
+                weights[i][j] += sumOfDeltas/batchSize;
             }
         }
     }
@@ -115,9 +115,9 @@ public class Layer_Dense {
             for (int j = 0; j < out[0].length; j++){
                 sumOfDeltas = 0.0;
                 for (int k = 0; k < batchSize; k++){
-                    sumOfDeltas += deltaweights[i][j][k];
+                    sumOfDeltas += deltaweights[k][j][i];
                 }
-                weights[i][j] = sumOfDeltas/batchSize;
+                weights[i][j] += sumOfDeltas/batchSize;
             }
         }
     }
