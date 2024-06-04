@@ -40,7 +40,7 @@ public class main {
             network n1 = new network(new int[]{784, 6, 6, 10});
             long startTime = System.nanoTime();
 
-            n1.train(X, Y);
+            n1.train(X1, Y1);
 
             long endTime = System.nanoTime();
             System.out.println("Elapsed time in nanoseconds: " + (endTime-startTime));
