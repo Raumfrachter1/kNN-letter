@@ -45,11 +45,17 @@ public class Activaction_function {
         }
         return result;
     }
+
     public static Double[] sigmoidDerivative(Double[] output) {
         Double[] result = new Double[output.length];
         for (int i = 0; i < output.length; i++) {
-                result[i] = output[i] * (1 - output[i]);
+                result[i] = sigmoid(output[i]) * (1 - sigmoid(output[i]));
         }
         return result;
+    }
+
+    public static double sigmoidDerivative(double value){
+        double tmp = sigmoid(value);
+        return tmp * (1 - tmp);
     }
 }

@@ -1,14 +1,15 @@
-import java.util.Arrays;
 import java.util.Random;
 
 public class Layer_Dense {
     //Attribute
     private Double[][] weights;
     private Double[] biases;
-    private Double[] delta;
+    private Double[][] delta;
     private Double[][] net;
     private Double[][] out;
-    private Double eta;
+    private double eta = 0.01;
+    private int batchSize;
+
 
 
 
@@ -24,15 +25,16 @@ public class Layer_Dense {
         setWeights_random(input, neurons);
         biases = new Double[neurons];
         setBiasese_random(neurons);
-        delta = new Double[neurons];
     }
 
-    Layer_Dense(int input, int neurons, Double[][] weights, Double[] biases){
+    Layer_Dense(Double[][] weights, Double[] biases){
         this.weights = weights;
         this.biases = biases;
-        delta = new Double[neurons];
     }
 
+    Layer_Dense(){
+
+    }
     /**
      *
      * forward is used if the next layer is a hidden layer
@@ -40,29 +42,88 @@ public class Layer_Dense {
      * forward_out is used if the next layer is the output layer. I will use the different methods to normalize my outputvector what isn't nessary at the hidden layers
      *
      */
-    public Double[][] forward(Double[][] input){ //Batchsize < 1
+    public void forward(Double[][] input){ //Batchsize < 1
         net = new Double[input.length][input[0].length];
         this.net = math.add(math.dot(input, weights), biases);
         this.out = Activaction_function.sigmoid(net);
-        return this.out;
     }
 
-    public Double[] forward(Double[] input){
+    public void forward(Double[] input){
         net = new Double[1][weights[0].length];
         this.net[0]= math.add(math.dot(weights, input), biases);
         out = new Double[1][weights[0].length];
         this.out = Activaction_function.sigmoid(net);
-        return this.out[0];
     }
 
-    public void backward(Double[][] Y, Double[][] output){
-        double sum = 0.0;
-        for(int j = 0; j < net[0].length; j++) {
+    public void backward_outlayer(Double[][] y, Double[][] outPrev){
+        batchSize = out.length;
+        delta = new Double[batchSize][out[0].length];
 
-            for (int i = 0; i < delta.length; i++) {
-              //  this.delta[i] = Activaction_function.sigmoidDerivative();
+        double derivativOfTheLoss;
+        double derivativOfTheActivactionFunction;
+        Double[][][] deltaweights = new Double[batchSize][out[0].length][outPrev[0].length];
+
+        for (int j = 0; j < batchSize; j++){
+            derivativOfTheLoss = 0.0;
+            derivativOfTheActivactionFunction = 0.0;
+            for (int i = 0; i < out[0].length; i++){
+                derivativOfTheLoss += out[j][i] - y[j][i];
+                derivativOfTheActivactionFunction += Activaction_function.sigmoidDerivative(net[j][i]);
+                delta[j][i] = derivativOfTheActivactionFunction * derivativOfTheLoss;
+                for (int k = 0; k < outPrev[0].length;  k++){
+                    deltaweights[j][i][k] = -eta * delta[j][i] * outPrev[j][k];
+                }
             }
         }
+
+        for (int i = 0; i < outPrev[0].length; i++){
+            for (int j = 0; j < out[0].length; j++){
+                weights[i][j] += math.averageOfAVector(deltaweights[i][j]);
+            }
+        }
+    }
+
+    public void backward(Double[][] deltaPrev, Double[][] outPrev, Double[][] weightsPrev){
+        batchSize = out.length;
+
+        delta = new Double[batchSize][out[0].length];
+        double derivativOfTheActivactionFunction;
+        double sumOfDeltas;
+        Double[][][] deltaweights = new Double[batchSize][out[0].length][outPrev[0].length];
+
+        for (int j = 0; j < batchSize; j++){
+            sumOfDeltas = 0.0;
+            derivativOfTheActivactionFunction = 0.0;
+            for (int i = 0; i < out[0].length; i++){
+                sumOfDeltas = 0.0;
+                for (int k = 0; k < deltaPrev[0].length; k++){
+                    sumOfDeltas += deltaPrev[j][k] * weightsPrev[i][k];
+                }
+                derivativOfTheActivactionFunction += Activaction_function.sigmoidDerivative(net[j][i]);
+                delta[j][i] = derivativOfTheActivactionFunction * sumOfDeltas;
+                for (int k = 0; k < outPrev[0].length;  k++){
+                    deltaweights[j][i][k] = -eta * delta[j][i] * outPrev[j][k];
+                }
+            }
+        }
+
+        for (int i = 0; i < outPrev[0].length; i++){
+            for (int j = 0; j < out[0].length; j++){
+                weights[i][j] += math.averageOfAVector(deltaweights[i][j]);
+            }
+        }
+    }
+
+    public void printLoss(Double[][] y){
+        double sum = 0.0;
+
+        for (int i = 0; i < y.length; i++){
+            for (int j = 0; j < y[0].length; j++){
+                sum += (out[i][j] - y[i][j]) * (out[i][j] - y[i][j]);
+            }
+        }
+
+        System.out.println(sum/2);
     }
 
     private void setWeights_random(int input, int neurons){
@@ -93,15 +154,23 @@ public class Layer_Dense {
         return weights;
     }
 
-    public Double[] getDelta(){
+    public Double[][] getDelta(){
         return delta;
     }
 
-    public void setDelta(Double[] a){
+    public void setDelta(Double[][] a){
         delta = a;
     }
 
     public Double[][] getNet(){
         return this.net;
+    }
+
+    public Double[][] getOut(){
+        return this.out;
+    }
+
+    public void setOut(Double[][] out){
+        this.out = out;
     }
 }
