@@ -122,7 +122,7 @@ public class Layer_Dense {
         }
     }
 
-    public void printLoss(Double[][] y){
+    public double printLoss(Double[][] y){
         double sum = 0.0;
 
         for (int i = 0; i < y.length; i++){
@@ -131,7 +131,7 @@ public class Layer_Dense {
             }
         }
 
-        System.out.print(sum/2);
+        return sum/2;
     }
 
     private void setWeights_random(int input, int neurons){
